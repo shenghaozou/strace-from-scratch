@@ -42,7 +42,8 @@ func main() {
             end = time.Now()
 			err = syscall.PtraceGetRegs(pid, &regs)
 			if err != nil {
-				break
+                fmt.Printf("ERR: can't find pid %v, syscall error %v", pid, err)
+                break
 			}
 
 			// Uncomment to show each syscall as it's called
@@ -55,12 +56,14 @@ func main() {
 
 		err = syscall.PtraceSyscall(pid, 0)
 		if err != nil {
-			panic(err)
+            fmt.Printf("panic: %v", err)
+			break
 		}
 
 		_, err = syscall.Wait4(pid, nil, 0, nil)
 		if err != nil {
-			panic(err)
+            fmt.Printf("panic: %v", err)
+			break
 		}
 
 		exit = !exit
